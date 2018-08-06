@@ -15,13 +15,13 @@ fileLog = open('/home/osmc/run-fan.log', 'w+', 0)
 #########################
 # Log messages should be time stamped
 def timeStamp():
-    t = time.time()
-    s = datetime.datetime.fromtimestamp(t).strftime('%Y/%m/%d %H:%M:%S - ')
-    return s
+	t = time.time()
+	s = datetime.datetime.fromtimestamp(t).strftime('%Y/%m/%d %H:%M:%S - ')
+	return s
 
 # Write messages in a standard format
 def printMsg(s):
-    fileLog.write(timeStamp() + s + "\n")
+	fileLog.write(timeStamp() + s + "\n")
 
 #########################
 class Pin(object):
@@ -72,9 +72,7 @@ class Temperature(object):
         #   CPU performance is throttled at 82C
         #   running a CPU at lower temperatures will prolong its life
         self.startTemperature = 60.0
-
-        # Wait until the temperature is M degrees under the Max before shutting off
-        self.stopTemperature = self.startTemperature - 5.0
+        self.stopTemperature = 50.0
 
         printMsg("Start fan at: " + str(self.startTemperature))
         printMsg("Stop fan at: " + str(self.stopTemperature))
@@ -87,15 +85,17 @@ class Temperature(object):
     # Using the CPU's temperature, turn the fan on or off
     def checkTemperature(self, myFan, myPin):
         self.getTemperature()
-	print("CPU temp: " + str(self.cpuTemperature) + "Start temp: " + str(self.startTemperature) + "Stop temp: " + str(self.stopTemperature))
-        if self.cpuTemperature > self.startTemperature:
-            # need to turn fan on, but only if the fan is off
-            if myFan.fanOff:
-                myFan.setFan(self.cpuTemperature, True, myPin)
-        elif self.cpuTemperature <= self.stopTemperature:
-            # need to turn fan off, but only if the fan is on
-            if not myFan.fanOff:
-                myFan.setFan(self.cpuTemperature, False, myPin)
+	print("CPU temp: " + str(self.cpuTemperature) + " Start temp: " + str(self.startTemperature) + " Stop temp: " + str(self.stopTemperature))
+	if self.cpuTemperature > self.startTemperature:
+		# need to turn fan on, but only if the fan is off
+		if myFan.fanOff:
+			print("turning fan on")
+			myFan.setFan(self.cpuTemperature, True, myPin)
+	elif self.cpuTemperature <= self.stopTemperature:
+		# need to turn fan off, but only if the fan is on
+		if not myFan.fanOff:
+			print("turning fan off")
+			myFan.setFan(self.cpuTemperature, False, myPin)
 
 #########################
 printMsg("Starting: run-fan")
@@ -103,6 +103,7 @@ try:
     myPin = Pin()
     myFan = Fan()
     myTemp = Temperature()
+    myFan.setFan(0.0, False, myPin)
     while True:
         myTemp.checkTemperature(myFan, myPin)
 
