@@ -87,7 +87,7 @@ class Temperature(object):
     # Using the CPU's temperature, turn the fan on or off
     def checkTemperature(self, myFan, myPin):
         self.getTemperature()
-	print("CPU temp: " + str(self.cpuTemperature))
+	print("CPU temp: " + str(self.cpuTemperature) + "Start temp: " + str(self.startTemperature) + "Stop temp: " + str(self.stopTemperature))
         if self.cpuTemperature > self.startTemperature:
             # need to turn fan on, but only if the fan is off
             if myFan.fanOff:
