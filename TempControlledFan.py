@@ -71,8 +71,8 @@ class Temperature(object):
         #   Maximum operating temperature of Raspberry Pi 3 is 85C
         #   CPU performance is throttled at 82C
         #   running a CPU at lower temperatures will prolong its life
-        self.startTemperature = 47.5
-        self.stopTemperature = 47.3
+        self.startTemperature = 72.0
+        self.stopTemperature = 65.0
 
         printMsg("Start fan at: " + str(self.startTemperature))
         printMsg("Stop fan at: " + str(self.stopTemperature))
@@ -85,16 +85,13 @@ class Temperature(object):
     # Using the CPU's temperature, turn the fan on or off
     def checkTemperature(self, myFan, myPin):
         self.getTemperature()
-	print("CPU temp: " + str(self.cpuTemperature) + " Start temp: " + str(self.startTemperature) + " Stop temp: " + str(self.stopTemperature))
 	if self.cpuTemperature > self.startTemperature:
 		# need to turn fan on, but only if the fan is off
 		if myFan.fanOff:
-			print("turning fan on")
 			myFan.setFan(self.cpuTemperature, True, myPin)
 	elif self.cpuTemperature <= self.stopTemperature:
 		# need to turn fan off, but only if the fan is on
 		if not myFan.fanOff:
-			print("turning fan off")
 			myFan.setFan(self.cpuTemperature, False, myPin)
 
 #########################
