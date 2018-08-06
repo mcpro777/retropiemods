@@ -71,8 +71,8 @@ class Temperature(object):
         #   Maximum operating temperature of Raspberry Pi 3 is 85C
         #   CPU performance is throttled at 82C
         #   running a CPU at lower temperatures will prolong its life
-        self.startTemperature = 60.0
-        self.stopTemperature = 50.0
+        self.startTemperature = 47.5
+        self.stopTemperature = 47.3
 
         printMsg("Start fan at: " + str(self.startTemperature))
         printMsg("Stop fan at: " + str(self.stopTemperature))
